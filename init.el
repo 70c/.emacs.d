@@ -20,15 +20,15 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-;; enable theme, make sure it's installed
-(use-package kaolin-themes
+;; enable theme
+(use-package color-theme-sanityinc-tomorrow
   :ensure t
   :config
-  (load-theme 'kaolin-dark t))
+  (load-theme 'sanityinc-tomorrow-night t))
 
 ;; set default font
 (set-face-attribute 'default nil
-		    :font "Fira Code Medium"
+		    :font "Iosevka SS04 Medium"
 		    :height 105)
 
 ;; disable some minor-modes in mode-line
@@ -37,7 +37,8 @@
   :config
   :delight
   (eldoc-mode)
-  (org-indent-mode))
+  (org-indent-mode)
+  (auto-revert-mode))
 
 ;; indicate empty lines at the end of a file
 (setq-default indicate-empty-lines t)
@@ -52,10 +53,32 @@
 (size-indication-mode)
 (column-number-mode)
 
-
 ;; org-mode
 (use-package org
   :ensure t
+  :config
+  ;; additional todo keywords
+  (setq org-todo-keywords
+	'((sequence "TODO" "ON-GOING" "|" "DONE")
+	  (sequence "|" "CANCELLED")))
+  ;; darkburn-red, darkburn-orange, darkburn-green, darkburn-grey
+  ;; faces for these keywords
+  (setq org-todo-keyword-faces
+  	'(("TODO"	.	(:foreground "OrangeRed3"	:weight bold))
+  	  ("ON-GOING"	.	(:foreground "gold3"		:weight bold))
+  	  ("DONE"	.	(:foreground "SpringGreen3"	:weight bold))
+  	  ("CANCELLED"	.	(:foreground "dim gray"		:weight bold))))
+  (set-face-bold 'org-done t)
+  (set-face-bold 'org-todo t)
+  ;; set org levels to bold
+  (set-face-bold 'org-level-1 t)
+  (set-face-bold 'org-level-2 t)
+  (set-face-bold 'org-level-3 t)
+  (set-face-bold 'org-level-4 t)
+  (set-face-bold 'org-level-5 t)
+  (set-face-bold 'org-level-6 t)
+  (set-face-bold 'org-level-7 t)
+  (set-face-bold 'org-level-8 t)
   :hook (org-mode . org-indent-mode))
 
 
@@ -114,12 +137,19 @@ opened."
 
 ;; use apropos instead apropos-command for C-h a
 (global-set-key (kbd "C-h a") 'apropos)
+
 ;; bookmarks
 (global-set-key (kbd "C-c b") 'bookmark-jump)
 (global-set-key (kbd "C-c C-b") 'list-bookmarks)
 
+;; dired
+(global-set-key (kbd "C-c d") 'dired-jump)
+
 ;; disable ring bell
 (setq ring-bell-function 'ignore)
+
+;; insert newlines
+(setq next-line-add-newlines t)
 
 
 ;; disable startup screen
