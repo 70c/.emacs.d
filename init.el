@@ -53,6 +53,14 @@
 (size-indication-mode)
 (column-number-mode)
 
+
+;; haskell
+(use-package haskell-mode
+  :ensure t
+  :config
+  (setq haskell-program-name "ghci"))
+
+
 ;; org-mode
 (use-package org
   :ensure t
@@ -68,8 +76,8 @@
   	  ("ON-GOING"	.	(:foreground "gold3"		:weight bold))
   	  ("DONE"	.	(:foreground "SpringGreen3"	:weight bold))
   	  ("CANCELLED"	.	(:foreground "dim gray"		:weight bold))))
-  (set-face-bold 'org-done t)
-  (set-face-bold 'org-todo t)
+  ;; edit src blocks in same window
+  (setq org-src-window-setup 'current-window)
   ;; set org levels to bold
   (set-face-bold 'org-level-1 t)
   (set-face-bold 'org-level-2 t)
@@ -87,6 +95,11 @@
   :ensure t
   :bind ("C-s" . swiper))
 
+
+;; avy
+(use-package avy
+  :ensure t
+  :bind ("M-s" . avy-goto-word-1))
 
 ;; IDO
 (use-package ido-vertical-mode
@@ -177,6 +190,17 @@ opened."
 (setq auto-save-default nil)
 (setq create-lockfiles nil)
 
+
+;; ansi-term
+(defun open-or-switch-to-ansi-term ()
+  "Open `ansi-term'. If buffer already exists, switch to it."
+  (interactive)
+  (if (get-buffer "*ansi-term*")
+      (switch-to-buffer "*ansi-term*")
+    (ansi-term "/bin/bash")))
+(global-set-key (kbd "C-c t") 'open-or-switch-to-ansi-term)
+
+
 ;; support for russian leyout
 (defun reverse-input-method (input-method)
   "Build the reverse mapping of single letters from INPUT-METHOD."
@@ -204,8 +228,18 @@ opened."
 (reverse-input-method 'russian-computer)
 
 
+;; sudo find-file
+(defun sudo-find-file (file-name)
+  "Like find file, but opens the file as root."
+  (interactive "F(sudo) Find file: ")
+  (let ((tramp-file-name (concat "/sudo::" (expand-file-name file-name))))
+    (find-file tramp-file-name)))
+(global-set-key (kbd "C-c s") 'sudo-find-file)
+
+
 ;; put custom-set-variables into seperate file
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (unless (file-exists-p custom-file)
   (write-region "" nil custom-file))
 (load-file custom-file)
+(put 'upcase-region 'disabled nil)
