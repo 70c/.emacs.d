@@ -29,7 +29,7 @@
 ;; set default font
 (set-face-attribute 'default nil
 		    :font "Iosevka SS04 Medium"
-		    :height 105)
+		    :height 100)
 
 ;; disable some minor-modes in mode-line
 (use-package delight
@@ -87,6 +87,8 @@
   (set-face-bold 'org-level-6 t)
   (set-face-bold 'org-level-7 t)
   (set-face-bold 'org-level-8 t)
+  ;; org-habits
+  (add-to-list 'org-modules 'habits)
   :hook (org-mode . org-indent-mode))
 
 
@@ -226,6 +228,38 @@ opened."
       (activate-input-method current))))
 
 (reverse-input-method 'russian-computer)
+
+
+;; scroll doc-view document while in other window
+(defun scroll-other-window-up-doc-view ()
+  "Like `scroll-other-window', but works with `doc-view-mode'.
+Scroll the `doc-view-mode' document up."
+  (interactive)
+  (save-window-excursion
+    (other-window 1)
+    (when (equal major-mode 'doc-view-mode)
+      (doc-view-scroll-up-or-next-page))))
+(global-set-key (kbd "C-c v") 'scroll-other-window-up-doc-view)
+
+(defun scroll-other-window-down-doc-view ()
+  "Like `scroll-other-window', but works with `doc-view-mode'.
+Scrolls the `doc-view-mode' document down."
+  (interactive)
+  (save-window-excursion
+    (other-window 1)
+    (when (equal major-mode 'doc-view-mode)
+      (doc-view-scroll-down-or-previous-page))))
+(global-set-key (kbd "C-c DEL") 'scroll-other-window-down-doc-view)
+
+
+;; temporary: align the haskell book correctly
+(defun align-haskell-book ()
+  (interactive)
+  (doc-view-fit-width-to-window)
+  (image-bol nil)
+  (doc-view-enlarge 1.65)
+  (image-forward-hscroll 32))
+(define-key doc-view-mode-map (kbd "C-c a") #'align-haskell-book)
 
 
 ;; sudo find-file
