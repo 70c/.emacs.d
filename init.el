@@ -128,7 +128,6 @@ opened."
       (ibuffer-list-buffers)
       (switch-to-buffer-other-window "*Ibuffer*"))))
 (global-set-key (kbd "C-x C-b") 'open-or-jump-to-ibuffer)
-(define-key ibuffer-mode-map (kbd "q") 'kill-current-buffer)
 
 (use-package which-key
   :ensure t
