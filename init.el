@@ -28,7 +28,7 @@
 
 ;; set default font
 (set-face-attribute 'default nil
-		    :font "Iosevka SS04 Medium"
+		    :font "Fira Code Retina"
 		    :height 100)
 
 ;; disable some minor-modes in mode-line
@@ -124,9 +124,11 @@ opened."
   (if (get-buffer "*Ibuffer*")
       (unless (equal (buffer-name) "*Ibuffer*")
 	(switch-to-buffer-other-window "*Ibuffer*"))
-    (ibuffer-list-buffers)
-    (switch-to-buffers-other-window "*Ibuffer*")))
+    (progn
+      (ibuffer-list-buffers)
+      (switch-to-buffer-other-window "*Ibuffer*"))))
 (global-set-key (kbd "C-x C-b") 'open-or-jump-to-ibuffer)
+(define-key ibuffer-mode-map (kbd "q") 'kill-current-buffer)
 
 (use-package which-key
   :ensure t
@@ -252,16 +254,6 @@ Scrolls the `doc-view-mode' document down."
 (global-set-key (kbd "C-c DEL") 'scroll-other-window-down-doc-view)
 
 
-;; temporary: align the haskell book correctly
-(defun align-haskell-book ()
-  (interactive)
-  (doc-view-fit-width-to-window)
-  (image-bol nil)
-  (doc-view-enlarge 1.65)
-  (image-forward-hscroll 32))
-(define-key doc-view-mode-map (kbd "C-c a") #'align-haskell-book)
-
-
 ;; sudo find-file
 (defun sudo-find-file (file-name)
   "Like find file, but opens the file as root."
@@ -270,6 +262,9 @@ Scrolls the `doc-view-mode' document down."
     (find-file tramp-file-name)))
 (global-set-key (kbd "C-c s") 'sudo-find-file)
 
+
+;; indent-relative
+(global-set-key (kbd "M-i") 'indent-relative)
 
 ;; put custom-set-variables into seperate file
 (setq custom-file (concat user-emacs-directory "custom.el"))
